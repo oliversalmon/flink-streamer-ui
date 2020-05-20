@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import ProfileList from './ProfileList';
+import TweetList from './TweetList';
 
 class App extends Component {
   render() {
