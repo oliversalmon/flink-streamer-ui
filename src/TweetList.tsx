@@ -26,18 +26,10 @@ class TweetList extends Component<TweetListProps, TweetListState> {
 
   async componentDidMount() {
       this.setState({isLoading: true});
+
       const response = await fetch('http://localhost:3000/tweets');
       const data = await response.json();
       this.setState({tweets: data, isLoading: false});
-
-      const eventSource = new EventSource('http://localhost:8081/sse/tweets');
-      eventSource.onopen = (event: any) => console.log('open', event);
-      eventSource.onmessage = (event: any) => {
-        const tweet = JSON.parse(event.data).source;
-        this.state.tweets.push(tweet);
-        this.setState({tweets: this.state.tweets});
-      };
-      eventSource.onerror = (event: any) => console.log('error', event);
     }
 
   render() {
