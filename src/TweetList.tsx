@@ -5,17 +5,13 @@ interface Tweet {
     text : string;
 }
 
-interface RawTweet{
 
-    raw: string;
-}
 
 interface TweetListProps {
 }
 
 interface TweetListState {
   tweets: Array<Tweet>;
-  rawTweets: Array<RawTweet>;
   isLoading: boolean;
 }
 
@@ -26,7 +22,6 @@ class TweetList extends Component<TweetListProps, TweetListState> {
 
     this.state = {
       tweets: [],
-      rawTweets: [],
       isLoading: false
     };
   }
@@ -43,11 +38,12 @@ class TweetList extends Component<TweetListProps, TweetListState> {
       eventSource.onmessage = (event: any) => {
         //console.log(event.data)
         //console.log(JSON.parse(event.data))
-        const tweet = JSON.parse(event.data);
+        const tweet = JSON.parse(event.data).body;
+        //const body = JSON.parse(raw.body);
         console.log(tweet)
-        this.state.rawTweets.push(tweet);
+        this.state.tweets.push(tweet);
 
-        this.setState({rawTweets: this.state.rawTweets});
+        this.setState({tweets: this.state.tweets, isLoading:false});
        };
       eventSource.onerror = (event: any) => console.log('error', event);
 
@@ -55,19 +51,17 @@ class TweetList extends Component<TweetListProps, TweetListState> {
     }
 
   render() {
-    const {rawTweets, isLoading} = this.state;
+    const {tweets, isLoading} = this.state;
 
-    if (isLoading) {
-      return <p>Loading...</p>;
-    }
+
 
     return (
 
       <div>
               <h2>raw tweets List</h2>
-              {rawTweets.map((rawTweet: RawTweet) =>
-                <div >
-                  {rawTweet.raw}<br/>
+              {tweets.map((tweets: Tweet) =>
+                 <div key={tweets.id_str}>
+                  {tweets.text}<br/>
                 </div>
               )}
        </div>
