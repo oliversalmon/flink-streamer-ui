@@ -41,6 +41,12 @@ class TweetList extends Component<TweetListProps, TweetListState> {
         const tweet = JSON.parse(event.data).body;
         //const body = JSON.parse(raw.body);
         console.log(tweet)
+
+        //reset the array after 10 tweets
+        if(this.state.tweets.length > 10){
+            this.setState({tweets: []})
+        }
+
         this.state.tweets.push(tweet);
 
         this.setState({tweets: this.state.tweets, isLoading:false});
