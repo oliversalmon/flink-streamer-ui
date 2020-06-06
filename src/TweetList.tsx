@@ -33,7 +33,7 @@ class TweetList extends Component<TweetListProps, TweetListState> {
 //       const data = await response.json();
 //       this.setState({tweets: data, isLoading: false});
 
-      const eventSource = new EventSource('http://localhost:8082/sse/tweets');
+      const eventSource = new EventSource('http://flink-streamer-spring:8082/sse/tweets');
       eventSource.onopen = (event: any) => console.log('open', event);
       eventSource.onmessage = (event: any) => {
         //console.log(event.data)
