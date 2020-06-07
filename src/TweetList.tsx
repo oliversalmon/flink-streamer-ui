@@ -12,7 +12,8 @@ interface TweetListProps {
 
 interface TweetListState {
   tweets: Array<Tweet>;
-  num1: number,
+  tweets_added: number,
+  tweets_deleted: number
   isLoading: boolean;
 }
 
@@ -23,7 +24,8 @@ class TweetList extends Component<TweetListProps, TweetListState> {
 
     this.state = {
       tweets: [],
-      num1: 0,
+      tweets_added: 0,
+      tweets_deleted: 0,
       isLoading: false
     };
   }
@@ -51,20 +53,36 @@ class TweetList extends Component<TweetListProps, TweetListState> {
 
 
         this.state.tweets.push(tweet);
-        this.setState({ num1: this.state.num1+ 1 })
+        this.setState({ tweets_added: this.state.tweets_added+ 1 })
+         this.setState({ tweets_deleted: this.state.tweets_deleted+ 1 })
         console.log(this.state)
 
 
 
         this.setState({tweets: this.state.tweets,  isLoading:false});
        };
+
       eventSource.onerror = (event: any) => console.log('error', event);
+
+       const eventDeletedSource = new EventSource('http://localhost:8082/sse/deletetweets');
+            eventDeletedSource.onopen = (event: any) => console.log('open', event);
+            eventDeletedSource.onmessage = (event: any) => {
+              //console.log(event.data)
+              //console.log(JSON.parse(event.data))
+              const tweet = JSON.parse(event.data).body;
+              //const body = JSON.parse(raw.body);
+              console.log(tweet)
+
+              this.setState({ tweets_deleted: this.state.tweets_deleted+ 1 })
+              console.log(this.state)
+
+             };
 
 
     }
 
   render() {
-    const {tweets, num1,  isLoading} = this.state;
+    const {tweets, tweets_added, tweets_deleted,  isLoading} = this.state;
 
 
 
@@ -72,16 +90,20 @@ class TweetList extends Component<TweetListProps, TweetListState> {
 
       <div>
 
-              <h2>Tweet count</h2>
+              <h2>Tweet Added</h2>
               <div>
-                {num1}
+                {tweets_added}
               </div>
-              <h2>raw tweets of 10</h2>
-              {tweets.map((tweets: Tweet) =>
-                 <div key={tweets.id_str}>
-                  {tweets.text}<br/>
-                </div>
-              )}
+               <h2>Tweet Deleted </h2>
+               <div>
+                 {tweets_deleted}
+               </div>
+{/*               <h2>raw tweets of 10</h2> */}
+{/*               {tweets.map((tweets: Tweet) => */}
+{/*                  <div key={tweets.id_str}> */}
+{/*                   {tweets.text}<br/> */}
+{/*                 </div> */}
+{/*               )} */}
        </div>
     );
   }
