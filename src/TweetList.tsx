@@ -12,6 +12,7 @@ interface TweetListProps {
 
 interface TweetListState {
   tweets: Array<Tweet>;
+  num1: number,
   isLoading: boolean;
 }
 
@@ -22,6 +23,7 @@ class TweetList extends Component<TweetListProps, TweetListState> {
 
     this.state = {
       tweets: [],
+      num1: 0,
       isLoading: false
     };
   }
@@ -33,7 +35,7 @@ class TweetList extends Component<TweetListProps, TweetListState> {
 //       const data = await response.json();
 //       this.setState({tweets: data, isLoading: false});
 
-      const eventSource = new EventSource('http://flink-streamer-spring:8082/sse/tweets');
+      const eventSource = new EventSource('http://localhost:8082/sse/tweets');
       eventSource.onopen = (event: any) => console.log('open', event);
       eventSource.onmessage = (event: any) => {
         //console.log(event.data)
@@ -47,9 +49,14 @@ class TweetList extends Component<TweetListProps, TweetListState> {
             this.setState({tweets: []})
         }
 
-        this.state.tweets.push(tweet);
 
-        this.setState({tweets: this.state.tweets, isLoading:false});
+        this.state.tweets.push(tweet);
+        this.setState({ num1: this.state.num1+ 1 })
+        console.log(this.state)
+
+
+
+        this.setState({tweets: this.state.tweets,  isLoading:false});
        };
       eventSource.onerror = (event: any) => console.log('error', event);
 
@@ -57,14 +64,19 @@ class TweetList extends Component<TweetListProps, TweetListState> {
     }
 
   render() {
-    const {tweets, isLoading} = this.state;
+    const {tweets, num1,  isLoading} = this.state;
 
 
 
     return (
 
       <div>
-              <h2>raw tweets List</h2>
+
+              <h2>Tweet count</h2>
+              <div>
+                {num1}
+              </div>
+              <h2>raw tweets of 10</h2>
               {tweets.map((tweets: Tweet) =>
                  <div key={tweets.id_str}>
                   {tweets.text}<br/>

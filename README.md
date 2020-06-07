@@ -65,7 +65,7 @@ To push the docker image:
 `kubectl --kubeconfig=flink-mongo-cluster-config.yaml get nodes`
 
 3. Once you see a list of nodes; you are ready to deploy ui to K8
-4. Now cd to flink-streamer-ui/helm directory. This is where you are currently developing the UI from
+4. Now cd to flink-streamer-ui/helm/flink-streamer-ui directory. This is where you are currently developing the UI from
 5. Run the following helm command to install flink-streamer-ui
 
 `helm install flink-streamer-ui --kubeconfig ~/.kube/flink-mongo-cluster-kubeconfig.yaml . `
